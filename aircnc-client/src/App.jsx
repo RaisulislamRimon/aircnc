@@ -1,5 +1,5 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import reactLogo from "./assets/icons8-wind.gif";
 import "./App.css";
 import Wave from "react-wavify";
 import AOS from "aos";
