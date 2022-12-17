@@ -1,12 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import "./App.css";
+import Wave from "react-wavify";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+AOS.init();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <div className="App">
+    // <div data-aos="fade-in">
+    <div data-aos="fade-right">
+      <Wave mask="url(#mask)" fill="#1277b0">
+        <defs>
+          <linearGradient id="gradient" gradientTransform="rotate(90)">
+            <stop offset="0" stopColor="white" />
+            <stop offset="0.5" stopColor="black" />
+          </linearGradient>
+          <mask id="mask">
+            <rect x="0" y="0" width="2000" height="200" fill="url(#gradient)" />
+          </mask>
+        </defs>
+      </Wave>
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
@@ -28,7 +45,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
