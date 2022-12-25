@@ -1,9 +1,88 @@
 import React from "react";
-
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../Components/Button/PrimaryButton";
+import { AuthContext } from "../../contexts/AuthProvider";
+import toast from "react-hot-toast";
 
 const Signup = () => {
+  const {
+    user,
+    createUser,
+    updateUserProfile,
+    verifyEmail,
+    signInWithGoogle,
+    logout,
+    signin,
+    resetPassword,
+    loading,
+    setLoading,
+  } = useContext(AuthContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const image = form.image.files[0];
+    // console.log(name, email, password, image);
+
+    const formData = new FormData();
+    formData.append("image", image);
+    // console.log(formData);
+
+    const imgbbUrl = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_imgbb_apiKey
+    }`;
+
+    // return console.log(imgbbUrl);
+
+    fetch(imgbbUrl, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.success) {
+          console.log(data.data.display_url);
+          // return data.data.display_url;
+          const image = data.data.display_url;
+
+          // create user
+          createUser(email, password).then((result) => {
+            console.log(result);
+            // update user profile
+            updateUserProfile(name, image)
+              .then((result) => {
+                // console.log(result);
+                // send verification email
+                verifyEmail()
+                  .then((result) => {
+                    toast.success("Please verify your email");
+                    // console.log(result);
+                    // redirect to home page
+                    // toast.window.location.pathname = "/";
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          });
+        } else {
+          console.log(data.error.message);
+          alert("Please select an image");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   return (
     <div className="flex justify-center items-center pt-8">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
@@ -12,6 +91,7 @@ const Signup = () => {
           <p className="text-sm text-gray-400">Create a new account</p>
         </div>
         <form
+          onSubmit={handleSubmit}
           noValidate=""
           action=""
           className="space-y-12 ng-untouched ng-pristine ng-valid"
