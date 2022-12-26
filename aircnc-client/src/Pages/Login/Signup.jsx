@@ -8,6 +8,7 @@ import Spinner from "../../Components/Spinner/Spinner";
 
 const Signup = () => {
   const [spinning, setSpinning] = useState(false);
+  const [error, setError] = useState("");
   const {
     user,
     createUser,
@@ -47,44 +48,53 @@ const Signup = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.success) {
-          console.log(data.data.display_url);
+          // console.log(data.data.display_url);
           // return data.data.display_url;
           const image = data.data.display_url;
 
           // create user
-          createUser(email, password).then((result) => {
-            console.log(result);
-            // update user profile
-            updateUserProfile(name, image)
-              .then((result) => {
-                // console.log(result);
-                // send verification email
-                verifyEmail()
-                  .then((result) => {
-                    setSpinning(false);
-                    toast.success("Please verify your email");
-                    // console.log(result);
-                    // redirect to home page
-                    // toast.window.location.pathname = "/";
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          });
+          createUser(email, password)
+            .then((result) => {
+              // console.log(result);
+              // update user profile
+              updateUserProfile(name, image)
+                .then((result) => {
+                  // console.log(result);
+                  // send verification email
+                  verifyEmail()
+                    .then((result) => {
+                      setSpinning(false);
+                      toast.success("Please verify your email");
+                      // console.log(result);
+                      // redirect to home page
+                      // toast.window.location.pathname = "/";
+                    })
+                    .catch((err) => {
+                      // console.log(err);
+                    });
+                })
+                .catch((err) => {
+                  // console.log(err);
+                });
+            })
+            .catch((error) => {
+              // console.error(error);
+              console.log(error);
+              toast.error(error.message);
+              setSpinning(false);
+            });
         } else {
           setSpinning(false);
-          console.log(data.error.message);
+          // console.log(data);
+          // console.log(data.error.message);
           toast.error("Please select an image");
         }
       })
       .catch((error) => {
-        console.error(error);
+        // console.error(error);
+        // console.log(error);
       });
   };
 
@@ -149,6 +159,7 @@ const Signup = () => {
                 className="w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-green-500 bg-gray-200 text-gray-900"
                 data-temp-mail-org="0"
               />
+              {/* {error && <p className="text-red-600">{error}</p>} */}
             </div>
             <div>
               <div className="flex justify-between mb-2">
