@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../Components/Button/PrimaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
 import toast from "react-hot-toast";
+import Spinner from "../../Components/Spinner/Spinner";
 
 const Signup = () => {
+  const [spinning, setSpinning] = useState(false);
   const {
     user,
     createUser,
@@ -21,6 +23,7 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setSpinning(true);
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
@@ -60,6 +63,7 @@ const Signup = () => {
                 // send verification email
                 verifyEmail()
                   .then((result) => {
+                    setSpinning(false);
                     toast.success("Please verify your email");
                     // console.log(result);
                     // redirect to home page
@@ -74,8 +78,9 @@ const Signup = () => {
               });
           });
         } else {
+          setSpinning(false);
           console.log(data.error.message);
-          alert("Please select an image");
+          toast.error("Please select an image");
         }
       })
       .catch((error) => {
@@ -83,13 +88,21 @@ const Signup = () => {
       });
   };
 
+  // if (spinning) {
+  //   <Spinner />;
+  //   console.log("spinning");
+  // } else {
+  //   console.log("not spinning");
+  // }
+
   return (
     <div className="flex justify-center items-center pt-8">
-      <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
+      <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900 relative">
         <div className="mb-8 text-center">
           <h1 className="my-3 text-4xl font-bold">Signup</h1>
           <p className="text-sm text-gray-400">Create a new account</p>
         </div>
+        {spinning && <Spinner className={"mt-32 ml-32"} />}
         <form
           onSubmit={handleSubmit}
           noValidate=""

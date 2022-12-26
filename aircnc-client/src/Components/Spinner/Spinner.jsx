@@ -1,9 +1,12 @@
 import React from "react";
 
-const Spinner = () => {
+const Spinner = ({ className }) => {
+  console.log(className);
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="w-16 h-16 border-8 border-dashed rounded-3xl animate-spin mt-5 border-green-400"></div>
+    <div className="flex justify-center items-center h-full relative">
+      <div
+        className={`w-16 h-16 border-8 border-dashed rounded-3xl animate-spin  border-green-400 absolute inset-0 ${className}`}
+      ></div>
     </div>
   );
 };
